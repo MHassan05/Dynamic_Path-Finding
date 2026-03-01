@@ -3,13 +3,19 @@ from grid_input import GridInputWindow
 from visualizer import Visualizer
 
 
-def on_setup_done(rows, cols):
-    Visualizer(rows, cols)
-
-
 def main():
     root = tk.Tk()
-    app = GridInputWindow(root, callback=on_setup_done)
+    root.withdraw()   # hide the root window — we use it only as the Tk() base
+
+    def on_setup_done(rows, cols):
+        viz = Visualizer(root, rows, cols)
+        # When visualizer window is closed, exit the whole app
+        viz.window.protocol("WM_DELETE_WINDOW", root.destroy)
+
+    # Show setup window as a Toplevel too
+    setup = tk.Toplevel(root)
+    GridInputWindow(setup, callback=on_setup_done)
+
     root.mainloop()
 
 
